@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOGCAT | $mogcat — The Cat That Was Always Inevitable</title>
+  <meta name="description" content="mogcat $mogcat — a thousand epochs ago it was an experiment. a thousand epochs from now theyll say it was obvious." />
+  <link rel="icon" href="logo.png" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            void: '#05050a',
+            panel: '#0c0c14',
+            neon: {
+              cyan: '#00f0ff',
+              magenta: '#ff2bd6',
+              purple: '#a855f7',
+              orange: '#f5a623',
+            },
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+            meme: ['"Press Start 2P"', 'monospace'],
+            body: ['"Inter"', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            float: 'float 6s ease-in-out infinite',
+            glow: 'glow 2.5s ease-in-out infinite alternate',
+            shimmer: 'shimmer 3s linear infinite',
+            pulse-soft: 'pulseSoft 3s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            glow: {
+              '0%': { textShadow: '0 0 8px #00f0ff, 0 0 20px #00f0ff55' },
+              '100%': { textShadow: '0 0 16px #ff2bd6, 0 0 40px #ff2bd655' },
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '200% center' },
+              '100%': { backgroundPosition: '-200% center' },
+            },
+            pulseSoft: {
+              '0%, 100%': { opacity: '0.55' },
+              '50%': { opacity: '1' },
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background: #05050a;
+      color: #e8e8f0;
+    }
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .hero-overlay {
+      background:
+        linear-gradient(180deg, rgba(5,5,10,0.35) 0%, rgba(5,5,10,0.55) 40%, rgba(5,5,10,0.97) 100%),
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,43,214,0.18), transparent 70%),
+        radial-gradient(ellipse 60% 50% at 70% 60%, rgba(0,240,255,0.12), transparent 70%);
+    }
+    .glass {
+      background: rgba(12, 12, 20, 0.72);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+    }
+    .neon-border {
+      box-shadow:
+        0 0 0 1px rgba(0, 240, 255, 0.25),
+        0 0 24px rgba(0, 240, 255, 0.08),
+        inset 0 0 24px rgba(0, 240, 255, 0.03);
+    }
+    .btn-cyan {
+      background: linear-gradient(135deg, #00d4e8 0%, #00f0ff 50%, #7cf5ff 100%);
+      color: #05050a;
+      box-shadow: 0 0 24px rgba(0, 240, 255, 0.45), 0 4px 0 #008a96;
+    }
+    .btn-cyan:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 36px rgba(0, 240, 255, 0.65), 0 6px 0 #008a96;
+    }
+    .btn-cyan:active { transform: translateY(1px); box-shadow: 0 0 16px rgba(0, 240, 255, 0.4), 0 2px 0 #008a96; }
+    .btn-magenta {
+      background: linear-gradient(135deg, #d4149a 0%, #ff2bd6 50%, #ff6ee8 100%);
+      color: #fff;
+      box-shadow: 0 0 24px rgba(255, 43, 214, 0.4), 0 4px 0 #8b0a66;
+    }
+    .btn-magenta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 36px rgba(255, 43, 214, 0.6), 0 6px 0 #8b0a66;
+    }
+    .btn-magenta:active { transform: translateY(1px); box-shadow: 0 0 16px rgba(255, 43, 214, 0.35), 0 2px 0 #8b0a66; }
+    .step-num {
+      background: linear-gradient(135deg, #00f0ff, #ff2bd6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #00f0ff, #ff2bd6, #f5a623, #00f0ff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+    .ca-box {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+    .toast {
+      transform: translateY(120%);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .nav-scrolled {
+      background: rgba(5, 5, 10, 0.88) !important;
+      border-bottom-color: rgba(0, 240, 255, 0.2) !important;
+      backdrop-filter: blur(20px);
+    }
+    .dex-frame {
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.08);
+    }
+    .paw {
+      position: absolute;
+      font-size: 1.25rem;
+      opacity: 0.12;
+      pointer-events: none;
+      user-select: none;
+    }
+    @media (max-width: 640px) {
+      .meme-line { font-size: 0.55rem; line-height: 1.8; }
+    }
+  </style>
+</head>
+<body class="font-body antialiased overflow-x-hidden">
+
+  <!-- Toast -->
+  <div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] glass neon-border px-5 py-3 rounded-full text-sm font-semibold text-neon-cyan flex items-center gap-2 shadow-2xl">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+    <span id="toast-msg">CA copied king</span>
+  </div>
+
+  <!-- Nav -->
+  <nav id="nav" class="fixed top-0 inset-x-0 z-50 transition-all duration-300 border-b border-transparent bg-transparent">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-2.5 group">
+        <img src="logo.png" alt="mogcat logo" class="w-10 h-10 rounded-full object-cover ring-2 ring-neon-cyan/40 group-hover:ring-neon-magenta/60 transition shadow-[0_0_16px_rgba(0,240,255,0.35)]" />
+        <span class="font-display font-bold text-lg tracking-tight">
+          <span class="text-white">MOG</span><span class="text-neon-cyan">CAT</span>
+        </span>
+        <span class="hidden sm:inline text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-neon-magenta/20 text-neon-magenta border border-neon-magenta/30">$mogcat</span>
+      </a>
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-white/70">
+        <a href="#lore" class="hover:text-neon-cyan transition">Lore</a>
+        <a href="#how-to-buy" class="hover:text-neon-cyan transition">How to Buy</a>
+        <a href="#chart" class="hover:text-neon-cyan transition">Chart</a>
+      </div>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="https://t.me/mogcatsolportal" target="_blank" rel="noopener noreferrer" class="p-2 rounded-xl glass hover:border-neon-cyan/50 transition" aria-label="Telegram">
+          <img src="tg.png" alt="Telegram" class="w-5 h-5 object-contain" />
+        </a>
+        <a href="https://x.com/mogcatsolX" target="_blank" rel="noopener noreferrer" class="p-2 rounded-xl glass hover:border-neon-cyan/50 transition" aria-label="Twitter / X">
+          <img src="x.png" alt="X / Twitter" class="w-5 h-5 object-contain" />
+        </a>
+        <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=Ct2VDLuBanTr6jo8jHXQtZqncwxtN31aovHC1yDepump" target="_blank" rel="noopener noreferrer"
+           class="btn-cyan hidden sm:inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wide transition">
+          Buy Now
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header id="top" class="relative min-h-screen flex flex-col justify-end pb-16 sm:pb-24 pt-16">
+    <div class="absolute inset-0 overflow-hidden">
+      <img src="banner.png" alt="mogcat banner" class="w-full h-full object-cover object-center scale-105" />
+      <div class="absolute inset-0 hero-overlay"></div>
+      <div class="absolute inset-0 grid-bg opacity-40"></div>
+    </div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 w-full">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full glass text-xs font-semibold uppercase tracking-widest text-neon-cyan">
+            <span class="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-pulse-soft"></span>
+            Live on Solana
+          </div>
+          <h1 class="font-display font-bold text-5xl sm:text-6xl md:text-7xl leading-[0.95] tracking-tight mb-4">
+            <span class="text-white">MOG</span><span class="gradient-text">CAT</span>
+          </h1>
+          <p class="text-lg sm:text-xl text-white/75 max-w-lg mb-2 font-medium">
+            The coolest cat in the cyber epoch.
+          </p>
+          <p class="text-sm text-white/45 mb-8 uppercase tracking-[0.2em] font-semibold">
+            Symbol <span class="text-neon-magenta">$mogcat</span>
+          </p>
+
+          <!-- Meme lore teaser -->
+          <p class="meme-line font-meme text-[0.65rem] sm:text-xs leading-relaxed text-neon-cyan/90 mb-8 max-w-xl animate-glow">
+            A THOUSAND EPOCHS AGO IT WAS AN EXPERIMENT<br />
+            A THOUSAND EPOCHS FROM NOW THEYLL SAY IT WAS OBVIOUS
+          </p>
+
+          <div class="flex flex-wrap gap-3">
+            <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=Ct2VDLuBanTr6jo8jHXQtZqncwxtN31aovHC1yDepump" target="_blank" rel="noopener noreferrer"
+               class="btn-cyan inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl text-base font-bold uppercase tracking-wide transition">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              Buy Now
+            </a>
+            <a href="https://dexscreener.com/solana/Ct2VDLuBanTr6jo8jHXQtZqncwxtN31aovHC1yDepump" target="_blank" rel="noopener noreferrer"
+               class="btn-magenta inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl text-base font-bold uppercase tracking-wide transition">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+              Chart
+            </a>
+            <a href="#how-to-buy" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl text-base font-bold uppercase tracking-wide glass neon-border text-white hover:border-neon-cyan/50 transition">
+              How to Buy
+            </a>
+          </div>
+        </div>
+
+        <!-- Logo float card -->
+        <div class="flex justify-center lg:justify-end">
+          <div class="relative animate-float">
+            <div class="absolute -inset-6 rounded-full bg-gradient-to-br from-neon-cyan/30 via-neon-magenta/20 to-neon-orange/20 blur-2xl"></div>
+            <div class="relative glass neon-border rounded-3xl p-3 sm:p-4">
+              <img src="logo.png" alt="mogcat" class="w-40 h-40 sm:w-52 sm:h-52 object-contain rounded-2xl bg-white" />
+            </div>
+            <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-void/90 border border-neon-cyan/40 text-neon-cyan">
+              nine lives one chart
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CA bar -->
+      <div class="mt-12 sm:mt-16">
+        <div class="glass neon-border rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div class="flex-1 min-w-0">
+            <p class="text-[10px] uppercase tracking-[0.25em] text-white/40 font-bold mb-1.5">Contract Address</p>
+            <p id="ca-display" class="ca-box font-mono text-sm sm:text-base text-neon-cyan truncate">Ct2VDLuBanTr6jo8jHXQtZqncwxtN31aovHC1yDepump</p>
+          </div>
+          <button type="button" id="copy-ca"
+                  class="shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm uppercase tracking-wide bg-white/5 border border-white/15 hover:border-neon-cyan hover:text-neon-cyan transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+            Copy CA
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Lore -->
+  <section id="lore" class="relative py-20 sm:py-28 grid-bg">
+    <div class="absolute top-10 left-[8%] paw">🐾</div>
+    <div class="absolute top-40 right-[12%] paw">🐾</div>
+    <div class="absolute bottom-20 left-[20%] paw">🐾</div>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-12">
+        <p class="text-neon-magenta text-xs font-bold uppercase tracking-[0.3em] mb-3">The Narrative</p>
+        <h2 class="font-display font-bold text-3xl sm:text-5xl text-white mb-4">Cat Lore</h2>
+        <div class="w-16 h-1 mx-auto rounded-full bg-gradient-to-r from-neon-cyan to-neon-magenta"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+        <div class="glass neon-border rounded-3xl p-6 sm:p-8 flex flex-col justify-center relative overflow-hidden">
+          <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-neon-cyan/10 blur-3xl"></div>
+          <p class="font-meme text-[0.55rem] sm:text-[0.7rem] leading-[2] text-center text-white/90">
+            A THOUSAND EPOCHS AGO<br />
+            IT WAS AN EXPERIMENT<br /><br />
+            A THOUSAND EPOCHS FROM NOW<br />
+            THEYLL SAY IT WAS OBVIOUS
+          </p>
+          <p class="mt-8 text-center text-sm text-white/45 italic">
+            no punctuation. no cope. only letters. only mog.
+          </p>
+        </div>
+
+        <div class="glass neon-border rounded-3xl p-6 sm:p-8 space-y-5">
+          <div class="flex gap-4">
+            <div class="shrink-0 w-12 h-12 rounded-2xl bg-neon-cyan/10 border border-neon-cyan/30 flex items-center justify-center text-2xl">😺</div>
+            <div>
+              <h3 class="font-display font-bold text-lg text-white mb-1">The Cool Cat Thesis</h3>
+              <p class="text-sm text-white/60 leading-relaxed">
+                Every chain needs a cat. Every epoch needs a mog. $mogcat is the final form of feline dominance on Solana — shades on, chart up, vibes immortal.
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="shrink-0 w-12 h-12 rounded-2xl bg-neon-magenta/10 border border-neon-magenta/30 flex items-center justify-center text-2xl">🕶️</div>
+            <div>
+              <h3 class="font-display font-bold text-lg text-white mb-1">Nine Lives Energy</h3>
+              <p class="text-sm text-white/60 leading-relaxed">
+                Born from pure meme chaos. Raised in the neon city. Destined to sit on the charts like it owns the place. Because it does.
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="shrink-0 w-12 h-12 rounded-2xl bg-neon-orange/10 border border-neon-orange/30 flex items-center justify-center text-2xl">🚀</div>
+            <div>
+              <h3 class="font-display font-bold text-lg text-white mb-1">Community First</h3>
+              <p class="text-sm text-white/60 leading-relaxed">
+                Join the portal. Post the memes. Flex the shades. This is not financial advice — this is cat narrative.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Token strip -->
+  <section class="py-6 border-y border-white/5 bg-panel/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div class="p-4">
+          <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">Name</p>
+          <p class="font-display font-bold text-xl text-white">mogcat</p>
+        </div>
+        <div class="p-4">
+          <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">Symbol</p>
+          <p class="font-display font-bold text-xl text-neon-cyan">$mogcat</p>
+        </div>
+        <div class="p-4">
+          <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">Chain</p>
+          <p class="font-display font-bold text-xl text-neon-magenta">Solana</p>
+        </div>
+        <div class="p-4">
+          <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold mb-1">Vibe</p>
+          <p class="font-display font-bold text-xl text-neon-orange">Cyber Cat</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Buy -->
+  <section id="how-to-buy" class="relative py-20 sm:py-28">
+    <div class="absolute inset-0 bg-gradient-to-b from-void via-panel/50 to-void pointer-events-none"></div>
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-14">
+        <p class="text-neon-cyan text-xs font-bold uppercase tracking-[0.3em] mb-3">Get In Position</p>
+        <h2 class="font-display font-bold text-3xl sm:text-5xl text-white mb-4">How to Buy</h2>
+        <p class="text-white/50 max-w-md mx-auto">Four easy steps. Grab SOL. Grab $mogcat. Become legend.</p>
+        <div class="w-16 h-1 mx-auto mt-5 rounded-full bg-gradient-to-r from-neon-cyan to-neon-magenta"></div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Step 1 -->
+        <article class="group glass neon-border rounded-3xl p-6 hover:border-neon-cyan/40 transition relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-neon-cyan/5 rounded-bl-full group-hover:bg-neon-cyan/10 transition"></div>
+          <span class="step-num font-display font-bold text-5xl leading-none">01</span>
+          <h3 class="font-display font-bold text-xl text-white mt-4 mb-2">Get a Wallet</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            Download <span class="text-neon-cyan font-semibold">Phantom</span> or <span class="text-neon-cyan font-semibold">Solflare</span>. Create a wallet. Guard that seed phrase like a cat guards a sunbeam.
+          </p>
+        </article>
+
+        <!-- Step 2 -->
+        <article class="group glass neon-border rounded-3xl p-6 hover:border-neon-magenta/40 transition relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-neon-magenta/5 rounded-bl-full group-hover:bg-neon-magenta/10 transition"></div>
+          <span class="step-num font-display font-bold text-5xl leading-none">02</span>
+          <h3 class="font-display font-bold text-xl text-white mt-4 mb-2">Fund with SOL</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            Buy <span class="text-neon-magenta font-semibold">SOL</span> on any CEX and send it to your wallet. SOL pays gas and buys the bag. No SOL no mog.
+          </p>
+        </article>
+
+        <!-- Step 3 -->
+        <article class="group glass neon-border rounded-3xl p-6 hover:border-neon-purple/40 transition relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-neon-purple/5 rounded-bl-full group-hover:bg-neon-purple/10 transition"></div>
+          <span class="step-num font-display font-bold text-5xl leading-none">03</span>
+          <h3 class="font-display font-bold text-xl text-white mt-4 mb-2">Open the Swap</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            Hit <span class="text-white font-semibold">Buy Now</span> or go to pump.fun swap. Paste the CA if needed. Double check you are on Solana.
+          </p>
+        </article>
+
+        <!-- Step 4 -->
+        <article class="group glass neon-border rounded-3xl p-6 hover:border-neon-orange/40 transition relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-neon-orange/5 rounded-bl-full group-hover:bg-neon-orange/10 transition"></div>
+          <span class="step-num font-display font-bold text-5xl leading-none">04</span>
+          <h3 class="font-display font-bold text-xl text-white mt-4 mb-2">Swap SOL for $mogcat</h3>
+          <p class="text-sm text-white/55 leading-relaxed">
+            Swap your SOL into <span class="text-neon-orange font-semibold">$mogcat</span>. Confirm the tx. Put on the shades. Welcome to the epoch.
+          </p>
+        </article>
+      </div>
+
+      <div class="mt-12 flex flex-wrap justify-center gap-3">
+        <a href="https://swap.pump.fun/?input=So11111111111111111111111111111111111111112&output=Ct2VDLuBanTr6jo8jHXQtZqncwxtN31aovHC1yDepump" target="_blank" rel="noopener noreferrer"
+           class="btn-cyan inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold uppercase tracking-wide transition">
+          Buy $mogcat Now
+        </a>
+        <button type="button" id="copy-ca-2"
+                class="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-base font-bold uppercase tracking-wide glass neon-border text-white hover:border-neon-cyan/50 transition">
+          Copy CA
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chart -->
+  <section id="chart" class="py-20 sm:py-28 grid-bg">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-10">
+        <p class="text-neon-orange text-xs font-bold uppercase tracking-[0.3em] mb-3">Live Markets</p>
+        <h2 class="font-display font-bold text-3xl sm:text-5xl text-white mb-4">Chart</h2>
+        <p class="text-white/50 text-sm mb-4">Dexscreener · Solana</p>
+        <a href="https://dexscreener.com/solana/Ct2VDLuBanTr6jo8jHXQtZqncwxtN31aovHC1yDepump" target="_blank" rel="noopener noreferrer"
+           class="btn-magenta inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wide transition">
+          Open Full Chart
+        </a>
+      </div>
+
+      <div class="dex-frame rounded-2xl overflow-hidden bg-panel">
+        <iframe
+          id="dex-embed"
+          title="mogcat Dexscreener chart"
+          src="https://dexscreener.com/solana/Ct2VDLuBanTr6jo8jHXQtZqncwxtN31aovHC1yDepump?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"
+          class="w-full h-[420px] sm:h-[520px] md:h-[620px] border-0"
+          loading="lazy"
+          allow="clipboard-write"
+        ></iframe>
+      </div>
+      <p class="text-center text-xs text-white/30 mt-4">
+        Embed updates when the CA / pair is live. Chart button opens Dexscreener in a new tab.
+      </p>
+    </div>
+  </section>
+
+  <!-- Join -->
+  <section class="py-20 relative overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-gradient-to-r from-neon-cyan/10 via-neon-magenta/10 to-neon-orange/10"></div>
+      <div class="absolute inset-0 grid-bg opacity-50"></div>
+    </div>
+    <div class="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
+      <img src="logo.png" alt="" class="w-20 h-20 mx-auto mb-6 rounded-full object-cover ring-4 ring-neon-cyan/30 shadow-[0_0_40px_rgba(0,240,255,0.3)]" />
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-white mb-3">Join the Pack</h2>
+      <p class="text-white/55 mb-8 max-w-md mx-auto">
+        Telegram portal open. X timeline active. The epoch is now.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="https://t.me/mogcatsolportal" target="_blank" rel="noopener noreferrer"
+           class="glass neon-border rounded-2xl px-6 py-4 flex items-center gap-3 hover:border-neon-cyan/50 transition group">
+          <img src="tg.png" alt="Telegram" class="w-8 h-8 object-contain" />
+          <div class="text-left">
+            <p class="text-xs text-white/40 uppercase tracking-wider font-bold">Telegram</p>
+            <p class="font-semibold text-white group-hover:text-neon-cyan transition">@mogcatsolportal</p>
+          </div>
+        </a>
+        <a href="https://x.com/mogcatsolX" target="_blank" rel="noopener noreferrer"
+           class="glass neon-border rounded-2xl px-6 py-4 flex items-center gap-3 hover:border-neon-magenta/50 transition group">
+          <img src="x.png" alt="X" class="w-8 h-8 object-contain" />
+          <div class="text-left">
+            <p class="text-xs text-white/40 uppercase tracking-wider font-bold">Twitter / X</p>
+            <p class="font-semibold text-white group-hover:text-neon-magenta transition">@mogcatsolX</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/5 py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <img src="logo.png" alt="" class="w-8 h-8 rounded-full object-cover" />
+        <span class="font-display font-bold"><span class="text-white">MOG</span><span class="text-neon-cyan">CAT</span></span>
+        <span class="text-white/30 text-sm">$mogcat</span>
+      </div>
+      <p class="text-xs text-white/30 text-center max-w-md">
+        $mogcat is a meme coin with no intrinsic value or expectation of financial return. DYOR. NFA.
+      </p>
+      <div class="flex items-center gap-3">
+        <a href="https://t.me/mogcatsolportal" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition">
+          <img src="tg.png" alt="Telegram" class="w-6 h-6" />
+        </a>
+        <a href="https://x.com/mogcatsolX" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition">
+          <img src="x.png" alt="X" class="w-6 h-6" />
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const CA = 'Ct2VDLuBanTr6jo8jHXQtZqncwxtN31aovHC1yDepump';
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    async function copyCA() {
+      try {
+        await navigator.clipboard.writeText(CA);
+        showToast('CA copied king');
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = CA;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('CA copied king');
+      }
+    }
+
+    document.getElementById('copy-ca').addEventListener('click', copyCA);
+    document.getElementById('copy-ca-2').addEventListener('click', copyCA);
+
+    // Nav glass on scroll
+    const nav = document.getElementById('nav');
+    const onScroll = () => {
+      if (window.scrollY > 40) nav.classList.add('nav-scrolled');
+      else nav.classList.remove('nav-scrolled');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  </script>
+</body>
+</html>
